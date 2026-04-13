@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Привет, {{ current_user.username }}!</h2>
+<hr>
+<div class="row">
+    <!-- Блок 1: Новые -->
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow-sm">
+            <div class="card-header">Новые / Открытые заявки</div>
+            <div class="card-body">
+                <h3 class="card-title mb-0">{{ open_tickets }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Блок 2: В работе -->
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow-sm">
+            <div class="card-header">Заявки в работе</div>
+            <div class="card-body">
+                <h3 class="card-title mb-0">{{ my_in_progress }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок 3: Выполненные -->
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3 shadow-sm">
+            <div class="card-header">Выполненные заявки</div>
+            <div class="card-body">
+                <h3 class="card-title mb-0">{{ completed_tickets }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
