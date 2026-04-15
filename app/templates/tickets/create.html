@@ -1,20 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Создание новой заявки</h2>
-<form method="POST" class="mt-3">
-    {{ form.hidden_tag() }}
-    <div class="mb-3">
-        {{ form.title.label(class="form-label") }}
-        {{ form.title(class="form-control") }}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Создание новой заявки</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label fw-bold") }}
+                        {{ form.title(class="form-control") }}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form.category.label(class="form-label fw-bold") }}
+                            {{ form.category(class="form-select") }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.priority.label(class="form-label fw-bold") }}
+                            {{ form.priority(class="form-select") }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.description.label(class="form-label fw-bold") }}
+                        {{ form.description(class="form-control", rows=6) }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary w-100 fw-bold") }}
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        {{ form.category.label(class="form-label") }}
-        {{ form.category(class="form-select") }}
-    </div>
-    <div class="mb-3">
-        {{ form.description.label(class="form-label") }}
-        {{ form.description(class="form-control", rows=5) }}
-    </div>
-    {{ form.submit(class="btn btn-success") }}
-</form>
+</div>
 {% endblock %}

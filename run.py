@@ -1,6 +1,6 @@
 import os
 from app import create_app, db
-from app.models import User, Ticket
+from app.models import User, Ticket, Article, Comment
 
 app = create_app()
 

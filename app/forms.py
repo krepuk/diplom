@@ -35,5 +35,23 @@ class CreateUserForm(FlaskForm):
 class TicketForm(FlaskForm):
     title = StringField('Тема проблемы', validators=[DataRequired()])
     category = SelectField('Область ошибки', choices=[('IT', 'Системное администрирование'), ('1C', '1С / Бухгалтерия'), ('HR', 'Кадры')], validators=[DataRequired()])
+    
+    # НОВОЕ ПОЛЕ В ФОРМЕ
+    priority = SelectField('Приоритет проблемы', choices=[
+        ('Низкий', '🟢 Низкий (Можно решить позже)'), 
+        ('Средний', '🟡 Средний (Мешает работать)'), 
+        ('Высокий', '🟠 Высокий (Работа остановлена)'), 
+        ('Критический', '🔴 Критический (Сломалось у всего отдела)')
+    ], validators=[DataRequired()])
+    
     description = TextAreaField('Описание проблемы', validators=[DataRequired()])
     submit = SubmitField('Создать заявку')
+
+class ArticleForm(FlaskForm):
+    title = StringField('Вопрос (или заголовок проблемы)', validators=[DataRequired()])
+    content = TextAreaField('Решение (подробное описание)', validators=[DataRequired()])
+    submit = SubmitField('Добавить в базу знаний')
+
+class CommentForm(FlaskForm):
+    text = TextAreaField('Написать комментарий...', validators=[DataRequired()])
+    submit = SubmitField('Отправить')

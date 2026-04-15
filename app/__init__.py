@@ -18,13 +18,16 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
-    # Регистрация Blueprints
+    # Импорт маршрутов (Blueprints)
     from app.routes.auth import auth_bp
     from app.routes.main import main_bp
     from app.routes.tickets import tickets_bp
+    from app.routes.knowledge import knowledge_bp
 
+    # Регистрация маршрутов
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(tickets_bp, url_prefix='/tickets')
+    app.register_blueprint(knowledge_bp, url_prefix='/knowledge')
 
     return app

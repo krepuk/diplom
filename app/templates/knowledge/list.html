@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>База знаний (FAQ)</h2>
+    {% if current_user.role in ['support', 'superadmin'] %}
+        <a href="{{ url_for('knowledge.create') }}" class="btn btn-primary">Добавить вопрос</a>
+    {% endif %}
+</div>
+
+{% if not articles %}
+    <div class="alert alert-info">База знаний пока пуста.</div>
+{% else %}
+    <div class="accordion shadow-sm" id="faqAccordion">
+        {% for article in articles %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ article.id }}">
+                <button class="accordion-button collapsed fw-bold text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#collapse{{ article.id }}" aria-expanded="false" aria-controls="collapse{{ article.id }}">
+                    {{ article.title }}
+                </button>
+            </h2>
+            <div id="collapse{{ article.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ article.id }}" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p class="mb-3" style="white-space: pre-wrap;">{{ article.content }}</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Автор: {{ article.author.username }} | {{ article.created_at.strftime('%Y-%m-%d') }}</small>
+                        {% if current_user.role in ['support', 'superadmin'] %}
+                        <form action="{{ url_for('knowledge.delete', id=article.id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить статью?')">Удалить</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
