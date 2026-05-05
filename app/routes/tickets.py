@@ -119,13 +119,11 @@ def change_status(id):
         db.session.commit()
         flash(f'Статус заявки изменен на "{new_status}".', 'success')
         
-    # Логика ПЕРЕОТКРЫТИЯ заявки работником
     elif new_status == 'Переоткрыть':
         ticket.status = 'В работе'
         ticket.reopen_count += 1
         
-        # Оставляем системный комментарий в чате
-        system_msg = f"⚠️ Заявка переоткрыта пользователем. (Попытка {ticket.reopen_count})"
+        system_msg = f"Заявка переоткрыта пользователем. (Попытка {ticket.reopen_count})"
         if ticket.reopen_count >= 3:
             system_msg += " Внимание! Заявка передана на контроль Суперадмину."
             

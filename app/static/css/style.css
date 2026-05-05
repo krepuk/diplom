@@ -1,0 +1,82 @@
+/* Общие настройки */
+body {
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+/* Контейнер навигации с красной линией */
+.rzd-nav-container {
+    background-color: white;
+    border-bottom: 4px solid #e21a1a; /* Та самая красная полоса */
+    margin-bottom: 30px;
+}
+
+/* 1. Контейнер: обнуляем всё и задаем жесткий gap */
+.rzd-nav-container .nav {
+    display: flex !important; /* Гарантируем флекс */
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none;
+    gap: 4px; /* ТУТ ЗАДАЕТСЯ РАССТОЯНИЕ (измени на 2px или 6px по вкусу) */
+    align-items: flex-end;
+}
+
+/* 2. Элемент списка: убираем все margin */
+.rzd-nav-container .nav-item {
+    background-color: #8e8e8e;
+    margin: 0 !important; /* Убираем все отступы, которые могли остаться */
+    padding: 0 !important;
+    transform: skewX(-25deg);
+    transition: 0.2s;
+    border: none;
+}
+
+/* 3. Ссылка: задаем одинаковую высоту и внутренние отступы */
+.rzd-nav-container .nav-item .nav-link {
+    display: block;
+    padding: 12px 25px; /* Одинаковые отступы внутри всех кнопок */
+    color: white !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transform: skewX(25deg); /* Возвращаем текст в ровное состояние */
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+/* Активная или первая вкладка (ГЛАВНАЯ) - КРАСНАЯ */
+.rzd-nav-container .nav-item.active-red,
+.rzd-nav-container .nav-item:first-child {
+    background-color: #e21a1a;
+}
+
+.rzd-nav-container .nav-item:hover {
+    background-color: #555;
+}
+
+/* Плитки на Дашборде */
+.rzd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 колонки как в оригинале */
+    gap: 2px;
+    background-color: #ccc;
+    border: 1px solid #ccc;
+}
+
+.rzd-card {
+    background-color: white;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    padding: 20px;
+}
+
+/* Чередование цветов плиток */
+.rzd-grid a:nth-child(4n+1),
+.rzd-grid a:nth-child(4n+3) {
+    background-color: #d9d9d9;
+}

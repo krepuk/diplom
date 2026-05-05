@@ -1,56 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-dark text-white text-center">
-                <h4 class="mb-0">Регистрация нового сотрудника</h4>
+    <div class="col-md-7">
+        <!-- Карточка в едином стиле сайта -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h2 class="fw-light mb-1" style="color: #333;">Регистрация сотрудника</h2>
+                <div class="mt-2" style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
             </div>
-            <div class="card-body p-4">
+            
+            <div class="card-body p-4 pt-2">
                 <form method="POST">
                     {{ form.hidden_tag() }}
-                    <div class="row">
+                    
+                    <div class="row mt-3">
                         <div class="col-md-6 mb-3">
-                            {{ form.username.label(class="form-label fw-bold") }}
-                            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "")) }}
+                            {{ form.username.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.username(class="form-control rounded-0" + (" is-invalid" if form.username.errors else ""), placeholder="Логин") }}
                             {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            {{ form.password.label(class="form-label fw-bold") }}
-                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                            {{ form.password.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.password(class="form-control rounded-0" + (" is-invalid" if form.password.errors else ""), placeholder="Пароль") }}
                             {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            {{ form.email.label(class="form-label fw-bold") }}
-                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                            {{ form.email.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.email(class="form-control rounded-0" + (" is-invalid" if form.email.errors else ""), placeholder="example@mail.ru") }}
                             {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            {{ form.phone.label(class="form-label fw-bold") }}
-                            {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                            {{ form.phone.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.phone(class="form-control rounded-0" + (" is-invalid" if form.phone.errors else ""), placeholder="+7 (999) ...") }}
                             {% for error in form.phone.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                         </div>
                     </div>
-                    <hr>
+
+                    <hr class="my-4" style="opacity: 0.1;">
+
                     <div class="mb-3">
-                        {{ form.role.label(class="form-label fw-bold") }}
-                        {{ form.role(class="form-select" + (" is-invalid" if form.role.errors else "")) }}
+                        {{ form.role.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                        {{ form.role(class="form-select rounded-0" + (" is-invalid" if form.role.errors else "")) }}
                         {% for error in form.role.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                     </div>
+
                     {% if current_user.role == 'superadmin' %}
                     <div class="mb-4">
-                        {{ form.department.label(class="form-label fw-bold text-muted") }}
-                        {{ form.department(class="form-select" + (" is-invalid" if form.department.errors else "")) }}
+                        {{ form.department.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                        {{ form.department(class="form-select rounded-0" + (" is-invalid" if form.department.errors else "")) }}
                         {% for error in form.department.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                        <small class="text-muted">Оставьте пустым, если регистрируете обычного работника.</small>
+                        <div class="form-text small">Оставьте пустым, если регистрируете рядового пользователя.</div>
                     </div>
                     {% endif %}
-                    {{ form.submit(class="btn btn-success w-100") }}
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
+                                style="background-color: #e21a1a; border: none;">
+                            ЗАРЕГИСТРИРОВАТЬ СОТРУДНИКА
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+        
+        <div class="mt-3 text-center">
+            <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-muted small">
+                ← Вернуться в панель управления
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    /* Фирменный красный фокус для всех полей */
+    .form-control:focus, .form-select:focus {
+        border-color: #e21a1a !important;
+        box-shadow: 0 0 0 0.25rem rgba(226, 26, 26, 0.1) !important;
+    }
+    
+    /* Сохраняем валидацию Bootstrap */
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+    }
+</style>
 {% endblock %}

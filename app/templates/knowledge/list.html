@@ -1,32 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>База знаний (FAQ)</h2>
+
+<!-- Заголовок в общем стиле -->
+<div class="d-flex justify-content-between align-items-end mb-4">
+    <div style="flex-grow: 1;">
+        <h2 class="fw-light mb-1" style="color: #333;">База знаний</h2>
+        <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
+    </div>
     {% if current_user.role in ['support', 'superadmin'] %}
-        <a href="{{ url_for('knowledge.create') }}" class="btn btn-primary">Добавить вопрос</a>
+        <div class="ms-4">
+            <a href="{{ url_for('knowledge.create') }}" class="btn rounded-0 text-white fw-bold px-4" 
+               style="background-color: #e21a1a; border: none; height: 45px; display: flex; align-items: center;">
+                ДОБАВИТЬ ВОПРОС
+            </a>
+        </div>
     {% endif %}
 </div>
 
 {% if not articles %}
-    <div class="alert alert-info">База знаний пока пуста.</div>
+    <div class="p-5 text-center text-muted bg-white border">База знаний пока пуста.</div>
 {% else %}
-    <div class="accordion shadow-sm" id="faqAccordion">
+    <div class="accordion accordion-flush shadow-sm border" id="faqAccordion">
         {% for article in articles %}
-        <div class="accordion-item">
+        <div class="accordion-item rounded-0">
             <h2 class="accordion-header" id="heading{{ article.id }}">
-                <button class="accordion-button collapsed fw-bold text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#collapse{{ article.id }}" aria-expanded="false" aria-controls="collapse{{ article.id }}">
+                <button class="accordion-button collapsed fw-bold text-dark bg-white rounded-0 py-3" 
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ article.id }}" 
+                        aria-expanded="false" aria-controls="collapse{{ article.id }}"
+                        style="box-shadow: none;">
                     {{ article.title }}
                 </button>
             </h2>
             <div id="collapse{{ article.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ article.id }}" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    <p class="mb-3" style="white-space: pre-wrap;">{{ article.content }}</p>
-                    <hr>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">Автор: {{ article.author.username }} | {{ article.created_at.strftime('%Y-%m-%d') }}</small>
+                <div class="accordion-body bg-white border-top">
+                    <p class="mb-3 fs-6" style="white-space: pre-wrap; color: #444;">{{ article.content }}</p>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-person"></i> Автор: <strong>{{ article.author.username }}</strong> | 
+                            <i class="bi bi-calendar"></i> {{ article.created_at.strftime('%d.%m.%Y') }}
+                        </small>
                         {% if current_user.role in ['support', 'superadmin'] %}
                         <form action="{{ url_for('knowledge.delete', id=article.id) }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить статью?')">Удалить</button>
+                            <button type="submit" class="btn btn-sm text-danger text-uppercase fw-bold small" 
+                                    style="border: none; background: none;"
+                                    onclick="return confirm('Удалить эту статью из базы знаний?')">Удалить</button>
                         </form>
                         {% endif %}
                     </div>
@@ -36,4 +53,16 @@
         {% endfor %}
     </div>
 {% endif %}
+
+<style>
+    /* Убираем синее свечение при клике на аккордеон */
+    .accordion-button:not(.collapsed) {
+        color: #e21a1a;
+        background-color: #f8f9fa;
+    }
+    .accordion-button:focus {
+        border-color: #e21a1a;
+        box-shadow: none;
+    }
+</style>
 {% endblock %}

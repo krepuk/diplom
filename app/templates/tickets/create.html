@@ -2,37 +2,60 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Создание новой заявки</h4>
+        <!-- Изменили mt-4 на mt-0, чтобы поднять блок максимально вверх -->
+        <div class="card shadow-sm mt-0 border-0">
+            <div class="card-header bg-white border-bottom-0 pt-3 px-4">
+                <h2 class="fw-light mb-1" style="color: #333;">Создание новой заявки</h2>
+                <!-- Исправлено: mt-1 в class, width: 100% чтобы линия была до конца -->
+                <div class="mt-1" style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
             </div>
-            <div class="card-body p-4">
+            
+            <div class="card-body p-4 pt-2">
                 <form method="POST">
                     {{ form.hidden_tag() }}
-                    <div class="mb-3">
-                        {{ form.title.label(class="form-label fw-bold") }}
-                        {{ form.title(class="form-control") }}
+                    
+                    <div class="mb-3 mt-2">
+                        {{ form.title.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                        {{ form.title(class="form-control rounded-0", placeholder="Краткое описание проблемы") }}
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            {{ form.category.label(class="form-label fw-bold") }}
-                            {{ form.category(class="form-select") }}
+                            {{ form.category.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.category(class="form-select rounded-0") }}
                         </div>
                         <div class="col-md-6">
-                            {{ form.priority.label(class="form-label fw-bold") }}
-                            {{ form.priority(class="form-select") }}
+                            {{ form.priority.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                            {{ form.priority(class="form-select rounded-0") }}
                         </div>
                     </div>
                     
                     <div class="mb-4">
-                        {{ form.description.label(class="form-label fw-bold") }}
-                        {{ form.description(class="form-control", rows=6) }}
+                        {{ form.description.label(class="form-label text-uppercase text-muted small fw-bold") }}
+                        {{ form.description(class="form-control rounded-0", rows=6, placeholder="Подробно опишите вашу проблему...") }}
                     </div>
-                    {{ form.submit(class="btn btn-primary w-100 fw-bold") }}
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" style="background-color: #e21a1a; border: none;">
+                            ОТПРАВИТЬ ЗАЯВКУ
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+        
+        <div class="mt-3 text-center">
+            <a href="{{ url_for('tickets.list_tickets') }}" class="text-decoration-none text-muted small">
+                ← Вернуться к списку без сохранения
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: #e21a1a;
+        box-shadow: 0 0 0 0.25rem rgba(226, 26, 26, 0.1);
+    }
+</style>
 {% endblock %}

@@ -1,67 +1,102 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Список заявок</h2>
-<div class="card shadow-sm mt-3">
-    <div class="card-body p-0">
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Приоритет</th> <!-- Новая колонка -->
-                    <th>Тема</th>
-                    <th>Категория</th>
-                    <th>Статус</th>
-                    <th>Создана</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                <tr>
-                    <td>{{ ticket.id }}</td>
-                    
-                    <!-- Вывод приоритета с цветами -->
-                    <td>
-                        <span class="badge w-100 text-dark border
-                            {% if ticket.priority == 'Низкий' %} bg-light text-secondary border-secondary
-                            {% elif ticket.priority == 'Средний' %} bg-warning
-                            {% elif ticket.priority == 'Высокий' %} bg-orange text-white style='background-color: #fd7e14;'
-                            {% else %} bg-danger text-white {% endif %}">
-                            {{ ticket.priority }}
-                        </span>
-                    </td>
 
-                    <td>
-                        {{ ticket.title }}
-                        {% if ticket.comment_count > 0 %}
-                            {% if ticket.has_new_reply(current_user.id) %}
-                                <span class="badge bg-danger ms-2 shadow-sm">💬 {{ ticket.comment_count }} (Новое)</span>
-                            {% else %}
-                                <span class="badge bg-secondary ms-2">💬 {{ ticket.comment_count }}</span>
+<!-- Заголовок -->
+<div class="mb-4">
+    <h2 class="fw-light mb-1" style="color: #333;">Список заявок</h2>
+    <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
+</div>
+
+<div class="card shadow-sm border-0 mt-3">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" style="table-layout: fixed; width: 100%;">
+                <thead style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <tr class="text-uppercase small text-muted fw-bold">
+                        <th class="ps-4" style="width: 70px;">ID</th>
+                        <th style="width: 140px;">Приоритет</th>
+                        <th>Тема</th>
+                        <th style="width: 130px;">Категория</th>
+                        <th class="text-center" style="width: 140px;">Статус</th>
+                        <th class="text-center" style="width: 160px;">Создана</th>
+                        <th class="text-end pe-4" style="width: 120px;">Действия</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="ps-4 text-muted small">#{{ ticket.id }}</td>
+                        
+                        <!-- Приоритет -->
+                        <td>
+                            <span class="badge rounded-0 fw-normal py-1" 
+                                  style="display: inline-block; width: 100px; text-align: center;
+                                  {% if ticket.priority == 'Низкий' %} background-color: #f8f9fa; color: #6c757d; border: 1px solid #dee2e6;
+                                  {% elif ticket.priority == 'Средний' %} background-color: #ffc107; color: #000;
+                                  {% elif ticket.priority == 'Высокий' %} background-color: #fd7e14; color: #fff;
+                                  {% else %} background-color: #dc3545; color: #fff; {% endif %}">
+                                {{ ticket.priority }}
+                            </span>
+                        </td>
+
+                        <!-- Тема -->
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <span class="fw-bold" style="color: #444;">{{ ticket.title }}</span>
+                            {% if ticket.comment_count > 0 %}
+                                <span class="badge rounded-0 bg-secondary ms-1" style="font-size: 0.7rem; vertical-align: middle;">
+                                    💬 {{ ticket.comment_count }}
+                                </span>
                             {% endif %}
-                        {% endif %}
-                    </td>
-                    <td>{{ ticket.category }}</td>
-                    <td>
-                        <span class="badge 
-                            {% if ticket.status == 'Новая' %}bg-danger
-                            {% elif ticket.status == 'В работе' %}bg-warning text-dark
-                            {% elif ticket.status == 'Решена' %}bg-info
-                            {% else %}bg-success{% endif %}">
-                            {{ ticket.status }}
-                        </span>
-                    </td>
-                    <td>{{ ticket.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
-                    <td><a href="{{ url_for('tickets.detail', id=ticket.id) }}" class="btn btn-sm btn-primary">Просмотр</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                        
+                        <td class="small text-muted">{{ ticket.category }}</td>
+                        
+                        <!-- Статус -->
+                        <!-- Статус (цветовой акцент только у Новой заявки) -->
+                        <td class="text-center">
+                            <span class="badge rounded-0 fw-normal py-1" 
+                                style="display: inline-block; width: 100px; text-align: center;
+                                {% if ticket.status == 'Новая' %} 
+                                    border: 1px solid #e21a1a; color: #e21a1a; background-color: transparent;
+                                {% else %} 
+                                    border: 1px solid #dee2e6; color: #6c757d; background-color: #f8f9fa;
+                                {% endif %}">
+                                {{ ticket.status }}
+                            </span>
+                        </td>
+                        
+                        <td class="text-center small text-muted">
+                            {{ ticket.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </td>
+                        
+                        <td class="text-end pe-4">
+                            <a href="{{ url_for('tickets.detail', id=ticket.id) }}" 
+                               class="btn btn-sm rounded-0 text-white px-3" 
+                               style="background-color: #e21a1a; border: none; font-size: 0.75rem; font-weight: bold;">
+                                ОТКРЫТЬ
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
         {% if not tickets %}
-        <div class="p-4 text-center text-muted">
-            Заявок пока нет.
+        <div class="p-5 text-center text-muted">
+            <p class="mb-0">Активных заявок не найдено.</p>
         </div>
         {% endif %}
     </div>
 </div>
+
+<style>
+    /* Легкая подсветка строки при наведении */
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02) !important;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
 {% endblock %}

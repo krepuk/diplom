@@ -1,36 +1,41 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Привет, {{ current_user.username }}!</h2>
-<hr>
-<div class="row">
-    <!-- Блок 1: Новые -->
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3 shadow-sm">
-            <div class="card-header">Новые / Открытые заявки</div>
-            <div class="card-body">
-                <h3 class="card-title mb-0">{{ open_tickets }}</h3>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Блок 2: В работе -->
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3 shadow-sm">
-            <div class="card-header">Заявки в работе</div>
-            <div class="card-body">
-                <h3 class="card-title mb-0">{{ my_in_progress }}</h3>
-            </div>
-        </div>
-    </div>
 
-    <!-- Блок 3: Выполненные -->
-    <div class="col-md-4">
-        <div class="card text-white bg-info mb-3 shadow-sm">
-            <div class="card-header">Выполненные заявки</div>
-            <div class="card-body">
-                <h3 class="card-title mb-0">{{ completed_tickets }}</h3>
-            </div>
-        </div>
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-light">Панель управления: {{ current_user.username }}</h2>
+</div>
+
+<div class="rzd-grid">
+    <!-- Блок 1 -->
+    <a href="{{ url_for('tickets.list_tickets') }}" class="rzd-card">
+        <span class="count text-primary">{{ open_tickets }}</span>
+        <span class="label">Новые / Открытые заявки</span>
+    </a>
+    
+    <!-- Блок 2 -->
+    <a href="#" class="rzd-card">
+        <span class="count text-success">{{ my_in_progress }}</span>
+        <span class="label">Заявки в работе</span>
+    </a>
+
+    <!-- Блок 3 -->
+    <a href="#" class="rzd-card">
+        <span class="count text-secondary">{{ completed_tickets }}</span>
+        <span class="label">Выполненные заявки</span>
+    </a>
+
+    <!-- Блок 4 (Заглушка под стиль оригинала) -->
+    <div class="rzd-card">
+        <div class="label text-danger">Статистика системы</div>
+        <small>Обновлено сегодня</small>
+    </div>
+</div>
+
+<!-- Пример списка ниже -->
+<div class="mt-5">
+    <h4>Последние действия</h4>
+    <div class="bg-white p-3 border">
+        <p class="text-muted">Здесь можно разместить таблицу или ленту событий в чистом стиле.</p>
     </div>
 </div>
 {% endblock %}
