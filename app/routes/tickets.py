@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
+from datetime import datetime
 from app.models import Ticket, Comment # <-- Добавили Comment
 from app.forms import TicketForm, CommentForm # <-- Добавили CommentForm
 
@@ -116,9 +117,9 @@ def change_status(id):
     # Обычная смена статусов
     if new_status in ['Решена', 'Закрыта']:
         ticket.status = new_status
+        ticket.closed_at = datetime.utcnow() # Прописываем время закрытия
         db.session.commit()
-        flash(f'Статус заявки изменен на "{new_status}".', 'success')
-        
+
     elif new_status == 'Переоткрыть':
         ticket.status = 'В работе'
         ticket.reopen_count += 1

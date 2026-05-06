@@ -33,16 +33,14 @@ class Ticket(db.Model):
     category = db.Column(db.String(50), nullable=False)
     priority = db.Column(db.String(20), default='Средний') 
     status = db.Column(db.String(20), default='Новая')
-    
-    # НОВОЕ ПОЛЕ: Счетчик переоткрытий
     reopen_count = db.Column(db.Integer, default=0)
-    
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-
     comments = db.relationship('Comment', backref='ticket', lazy='dynamic', cascade='all, delete')
+    closed_at = db.Column(db.DateTime, nullable=True)
+
+
 
     @property
     def comment_count(self):
