@@ -14,7 +14,7 @@ def index():
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():
-    # Начальные значения
+    # Инициализация переменных для аналитики
     category_data = {}
     priority_data = {}
     support_load = {}
@@ -27,15 +27,15 @@ def dashboard():
         my_in_progress = Ticket.query.filter_by(status='В работе').count()
         completed_tickets = Ticket.query.filter(Ticket.status.in_(['Решена', 'Закрыта'])).count()
 
-        # 2. Данные по Участкам (Категориям)
+        # 2. Активные заявки по участкам
         cat_stats = db.session.query(Ticket.category, func.count(Ticket.id)).group_by(Ticket.category).all()
         category_data = {c: count for c, count in cat_stats}
 
-        # 3. Данные по Приоритетам
+        # 3. Данные по приоритетам
         prio_stats = db.session.query(Ticket.priority, func.count(Ticket.id)).group_by(Ticket.priority).all()
         priority_data = {p: count for p, count in prio_stats}
 
-        # 4. Загрузка сотрудников (сколько у кого "В работе")
+        # 4. Загрузка сотрудников техподдержки
         load_stats = db.session.query(User.username, func.count(Ticket.id))\
             .join(Ticket, Ticket.assignee_id == User.id)\
             .filter(Ticket.status == 'В работе')\
@@ -48,11 +48,9 @@ def dashboard():
             total_sec = sum((t.closed_at - t.created_at).total_seconds() for t in resolved)
             avg_resolve_time = f"{(total_sec / len(resolved)) / 3600:.1f} ч."
 
-        all_time_stats = db.session.query(
-            Ticket.category, func.count(Ticket.id)
-        ).group_by(Ticket.category)\
-         .order_by(func.count(Ticket.id).desc()).all()
-        
+        # 6. Анализ за весь период (нижний график)
+        all_time_stats = db.session.query(Ticket.category, func.count(Ticket.id))\
+            .group_by(Ticket.category).order_by(func.count(Ticket.id).desc()).all()
         total_by_category = {cat: count for cat, count in all_time_stats}
 
     elif current_user.role == 'support':
