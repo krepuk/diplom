@@ -29,39 +29,46 @@ def logout():
 @auth_bp.route('/create_user', methods=['GET', 'POST'])
 @login_required
 def create_user():
-    # Запрещаем доступ обычным работникам
+    # 1. Сначала проверяем права доступа
     if current_user.role == 'employee':
         flash('У вас нет прав для доступа к этой странице.', 'danger')
         return redirect(url_for('main.dashboard'))
 
+    # 2. Инициализируем форму (ЭТО ДОЛЖНО БЫТЬ ПЕРЕД НАСТРОЙКОЙ РОЛЕЙ)
     form = CreateUserForm()
     
-    # Настраиваем доступные роли для создания
+    # 3. Теперь настраиваем доступные роли для этой формы
     if current_user.role == 'superadmin':
-        form.role.choices = [('employee', 'Работник (Сотрудник)'), ('support', 'Админ (Поддержка)')]
+        form.role.choices = [
+            ('employee', 'Контролер-кассир'),
+            ('employee', 'Билетный кассир'),
+            ('support', 'Инженер'),
+            ('superadmin', 'Ведущий инженер')
+        ]
     elif current_user.role == 'support':
-        form.role.choices = [('employee', 'Работник (Сотрудник)')]
-        # ВАЖНО: Если создает обычный админ, мы программно удаляем поле department, 
-        # чтобы оно не ломало проверку формы из-за своей скрытности
-        del form.department
+        form.role.choices = [
+            ('employee', 'Контролер-кассир'),
+            ('employee', 'Билетный кассир')
+        ]
+        # Если создает обычный инженер, убираем выбор отдела (он не может создавать админов)
+        if hasattr(form, 'department'):
+            del form.department
 
+    # 4. Логика сохранения данных
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
             email=form.email.data,
             phone=form.phone.data,
             role=form.role.data,
-            # Если поле department не было удалено строкой выше - берем его значение
             department=form.department.data if hasattr(form, 'department') and form.role.data == 'support' else None
         )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash(f'Пользователь {user.username} успешно создан!', 'success')
         return redirect(url_for('main.dashboard'))
     
-    # Если форма отправлена, но есть ошибки (например, занят email)
     elif request.method == 'POST':
-        flash('Форма не отправлена! Проверьте красные поля ниже.', 'danger')
+        flash('Ошибка! Проверьте заполнение полей.', 'danger')
         
     return render_template('auth/create_user.html', form=form)

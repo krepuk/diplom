@@ -41,6 +41,7 @@
 
                     <hr class="my-4" style="opacity: 0.1;">
 
+                    <!-- Поле ДОЛЖНОСТЬ (удалили старую подсказку) -->
                     <div class="mb-3">
                         {{ form.role.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.role(class="form-select rounded-0" + (" is-invalid" if form.role.errors else "")) }}
@@ -52,9 +53,10 @@
                         {{ form.department.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.department(class="form-select rounded-0" + (" is-invalid" if form.department.errors else "")) }}
                         {% for error in form.department.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                        <div class="form-text small">Оставьте пустым, если регистрируете рядового пользователя.</div>
-                    </div>
+
                     {% endif %}
+
+<!-- ... после поля Выбор участка ... -->
 
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
@@ -65,8 +67,11 @@
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
         
-        <div class="mt-3 text-center">
+        <div class="mt-2 text-center">
             <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-muted small">
                 ← Вернуться в панель управления
             </a>

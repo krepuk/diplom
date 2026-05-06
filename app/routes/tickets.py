@@ -21,7 +21,6 @@ def create():
         )
         db.session.add(ticket)
         db.session.commit()
-        flash('Заявка успешно создана!', 'success')
         return redirect(url_for('tickets.list_tickets'))
     return render_template('tickets/create.html', form=form)
 
@@ -57,7 +56,6 @@ def detail(id):
         )
         db.session.add(comment)
         db.session.commit()
-        flash('Комментарий добавлен.', 'success')
         return redirect(url_for('tickets.detail', id=ticket.id))
 
     # Получаем все комментарии к этой заявке, отсортированные по дате (старые сверху)
@@ -70,7 +68,7 @@ def detail(id):
 def take_ticket(id):
     ticket = Ticket.query.get_or_404(id)
     
-    # --- НОВАЯ ЛОГИКА ДЛЯ СУПЕРАДМИНА ---
+
     if current_user.role == 'superadmin':
         if ticket.reopen_count >= 3:
             old_assignee = ticket.assignee.username if ticket.assignee else "Не назначен"
@@ -85,26 +83,20 @@ def take_ticket(id):
             db.session.add(sys_comment)
             db.session.commit()
             
-            flash('Вы забрали проблемную заявку под свой контроль.', 'success')
             return redirect(url_for('tickets.detail', id=ticket.id))
         else:
-            flash('Вы можете забирать только проблемные заявки (от 3 возвратов).', 'danger')
             return redirect(url_for('tickets.detail', id=ticket.id))
-    # ------------------------------------
 
-    # --- СТАРАЯ ЛОГИКА ДЛЯ ОБЫЧНОЙ ПОДДЕРЖКИ ---
     if current_user.role != 'support':
         flash('У вас нет прав для принятия обычных заявок.', 'danger')
         return redirect(url_for('tickets.detail', id=ticket.id))
         
     if ticket.assignee_id is not None:
-        flash('Эту заявку уже забрал другой сотрудник!', 'warning')
         return redirect(url_for('tickets.list_tickets'))
         
     ticket.assignee_id = current_user.id
     ticket.status = 'В работе'
     db.session.commit()
-    flash('Вы приняли заявку в работу.', 'success')
     return redirect(url_for('tickets.detail', id=ticket.id))
 
 
@@ -117,7 +109,7 @@ def change_status(id):
     # Обычная смена статусов
     if new_status in ['Решена', 'Закрыта']:
         ticket.status = new_status
-        ticket.closed_at = datetime.utcnow() # Прописываем время закрытия
+        ticket.closed_at = datetime.utcnow() 
         db.session.commit()
 
     elif new_status == 'Переоткрыть':
@@ -132,6 +124,5 @@ def change_status(id):
         db.session.add(sys_comment)
         db.session.commit()
         
-        flash('Вы вернули заявку в работу.', 'warning')
         
     return redirect(url_for('tickets.detail', id=ticket.id))

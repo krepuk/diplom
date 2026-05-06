@@ -1,130 +1,136 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Основная карточка заявки -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-light">
-        <h5 class="mb-0">Заявка #{{ ticket.id }}: {{ ticket.title }}</h5>
-        <span class="badge 
-            {% if ticket.status == 'Новая' %}bg-danger
-            {% elif ticket.status == 'В работе' %}bg-warning text-dark
-            {% elif ticket.status == 'Решена' %}bg-info
-            {% else %}bg-success{% endif %}">
+
+<!-- Заголовок в едином стиле -->
+<div class="mb-4 d-flex justify-content-between align-items-end">
+    <div style="flex-grow: 1;">
+        <h2 class="fw-light mb-1" style="color: #333;">Заявка #{{ ticket.id }}: {{ ticket.title }}</h2>
+        <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
+    </div>
+    <div class="ms-4">
+        <!-- Статус: Красная рамка, черный текст -->
+        <span class="rounded-0 fw-bold py-1 px-3" 
+            style="display: inline-block; min-width: 120px; text-align: center; font-size: 0.9rem; 
+                    border: 1px solid #e21a1a; color: #000000;">
             {{ ticket.status }}
         </span>
     </div>
-    <div class="card-body">
-        <div class="row mb-3">
+</div>
+
+<div class="row">
+    <!-- Левая колонка: Основная информация -->
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-0 mb-4">
+            <div class="card-body p-4">
+                <div class="row mb-4">
                     <div class="col-md-6">
-                        <p class="mb-1"><strong>Отправитель:</strong> {{ ticket.creator.username }}</p>
-                        <p class="mb-1"><strong>Категория:</strong> {{ ticket.category }}</p>
-                        <p class="mb-1"><strong>Приоритет:</strong> 
-                            <span class="{% if ticket.priority == 'Критический' %}text-danger fw-bold{% elif ticket.priority == 'Высокий' %}text-warning fw-bold{% endif %}">
+                        <small class="text-uppercase text-muted fw-bold d-block mb-1">Отправитель</small>
+                        <p class="mb-3">{{ ticket.creator.username }}</p>
+
+                        <small class="text-uppercase text-muted fw-bold d-block mb-1">Участок</small>
+                        <p class="mb-3">{{ ticket.category }}</p>
+
+                        <small class="text-uppercase text-muted fw-bold d-block mb-1">Приоритет</small>
+                        <p class="mb-0">
+                            <span class="fw-bold {% if ticket.priority in ['Высокий', 'Критический'] %}text-danger{% else %}text-muted{% endif %}">
                                 {{ ticket.priority }}
                             </span>
                         </p>
                     </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="mb-1"><strong>Исполнитель:</strong> 
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted fw-bold d-block mb-1">Исполнитель</small>
+                        <p class="mb-3">
                             {% if ticket.assignee %}
-                                <span class="text-success">{{ ticket.assignee.username }}</span>
+                                <span class="text-dark fw-bold">{{ ticket.assignee.username }}</span>
                             {% else %}
-                                <span class="text-muted">Не назначен</span>
+                                <span class="text-muted italic">Не назначен</span>
                             {% endif %}
                         </p>
-                        <p class="mb-1"><strong>Дата:</strong> {{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+                        <small class="text-uppercase text-muted fw-bold d-block mb-1">Дата создания</small>
+                        <p class="mb-0">{{ ticket.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
                     </div>
                 </div>
-        <hr>
-        <h6>Описание проблемы:</h6>
-        <p class="card-text bg-light p-3 rounded border" style="white-space: pre-wrap;">{{ ticket.description }}</p>
+
+                <hr style="opacity: 0.1;">
+                
+                <small class="text-uppercase text-muted fw-bold d-block mb-2">Описание проблемы</small>
+                <div class="p-3 bg-light border-start border-4 border-secondary" style="white-space: pre-wrap; color: #444; background-color: #fcfcfc !important;">{{ ticket.description }}</div>
+            </div>
+
+            <!-- Подвал карточки с кнопками -->
+            <div class="card-footer bg-white border-top p-4 d-flex gap-2">
+                <a href="{{ url_for('tickets.list_tickets') }}" class="btn rounded-0 border fw-bold small text-muted text-uppercase px-3">← Назад</a>
+
+                {% if current_user.role in ['support', 'superadmin'] and ticket.status == 'Новая' %}
+                <form action="{{ url_for('tickets.take_ticket', id=ticket.id) }}" method="POST">
+                    <button type="submit" class="btn rounded-0 text-white fw-bold px-3" style="background-color: #e21a1a; border: none;">ПРИНЯТЬ В РАБОТУ</button>
+                </form>
+                {% endif %}
+
+                {% if current_user.role in ['support', 'superadmin'] and ticket.status == 'В работе' and ticket.assignee_id == current_user.id %}
+                <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST">
+                    <input type="hidden" name="status" value="Решена">
+                    <button type="submit" class="btn rounded-0 text-white fw-bold px-3" style="background-color: #e21a1a; border: none;">РЕШЕНО</button>
+                </form>
+                {% endif %}
+
+                {% if current_user.id == ticket.creator_id and ticket.status == 'Решена' %}
+                    <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST">
+                        <input type="hidden" name="status" value="Закрыта">
+                        <button type="submit" class="btn rounded-0 text-white fw-bold px-3" style="background-color: #198754; border: none;">ПОДТВЕРДИТЬ</button>
+                    </form>
+                    <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST">
+                        <input type="hidden" name="status" value="Переоткрыть">
+                        <button type="submit" class="btn rounded-0 border-danger text-danger fw-bold px-3" onclick="return confirm('Переоткрыть заявку?')">ПРОБЛЕМА ОСТАЛАСЬ</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    
-    <div class="card-footer bg-white">
-        <a href="{{ url_for('tickets.list_tickets') }}" class="btn btn-outline-secondary me-2">Назад к списку</a>
 
-        {% if current_user.role == 'support' and ticket.status == 'Новая' %}
-        <form action="{{ url_for('tickets.take_ticket', id=ticket.id) }}" method="POST" class="d-inline">
-            <button type="submit" class="btn btn-warning">Принять в работу</button>
-        </form>
-        {% endif %}
-
-        {% if current_user.role in ['support', 'superadmin'] and ticket.status == 'В работе' and ticket.assignee_id == current_user.id %}
-        <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST" class="d-inline">
-            <input type="hidden" name="status" value="Решена">
-            <button type="submit" class="btn btn-info">Отметить как "Решена"</button>
-        </form>
-        {% endif %}
-
-<!-- Блок действий для создателя (работника) -->
-        {% if current_user.id == ticket.creator_id and ticket.status == 'Решена' %}
-            <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST" class="d-inline">
-                <input type="hidden" name="status" value="Закрыта">
-                <button type="submit" class="btn btn-success">Всё работает (Закрыть)</button>
-            </form>
-            
-            <!-- НОВАЯ КНОПКА: Переоткрыть -->
-            <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST" class="d-inline ms-2">
-                <input type="hidden" name="status" value="Переоткрыть">
-                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Вы уверены, что проблема не решена? Заявка будет возвращена админу.')">Проблема осталась (Переоткрыть)</button>
-            </form>
-        {% endif %}
+    <!-- Правая колонка: Обсуждение -->
+    <div class="col-md-4">
+        <h5 class="text-uppercase small fw-bold text-muted mb-3">Обсуждение</h5>
         
-        <!-- Значок для проблемной заявки (виден всем) -->
-        {% if ticket.reopen_count >= 3 %}
-            <!-- Кнопка для Суперадмина: Забрать проблемную заявку -->
-            {% if current_user.role == 'superadmin' and ticket.reopen_count >= 3 and ticket.assignee_id != current_user.id %}
-            <form action="{{ url_for('tickets.take_ticket', id=ticket.id) }}" method="POST" class="d-inline ms-2">
-                <button type="submit" class="btn btn-danger shadow-sm">
-                    <i class="fas fa-hand-paper"></i> Забрать под свой контроль
-                </button>
-            </form>
+        <div class="mb-4" style="max-height: 500px; overflow-y: auto;">
+            {% if not comments %}
+                <p class="text-muted small italic">Комментариев пока нет.</p>
+            {% else %}
+                {% for comment in comments %}
+                <!-- ПОДСВЕТКА ПОДДЕРЖКИ КРАСНЫМ -->
+                <div class="p-3 mb-2 rounded-0 shadow-sm bg-white border 
+                    {% if comment.author.role in ['support', 'superadmin'] %}border-start border-4{% endif %}"
+                    {% if comment.author.role in ['support', 'superadmin'] %}style="border-left-color: #e21a1a !important;"{% endif %}>
+                    
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="fw-bold" 
+                               style="{% if comment.author.role in ['support', 'superadmin'] %}color: #e21a1a;{% endif %}">
+                            {{ comment.author.username }}
+                        </small>
+                        <small class="text-muted" style="font-size: 0.7rem;">{{ comment.created_at.strftime('%d.%m %H:%M') }}</small>
+                    </div>
+                    <p class="mb-0 small" style="white-space: pre-wrap; color: #444;">{{ comment.text }}</p>
+                </div>
+                {% endfor %}
             {% endif %}
-            <span class="badge bg-danger ms-3 fs-6"> ПРОБЛЕМНАЯ ЗАЯВКА (Контроль Суперадмина)</span>
+        </div>
+
+        {% if ticket.status != 'Закрыта' %}
+        <div class="card border-0 rounded-0 shadow-sm">
+            <div class="card-body p-3">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.text(class="form-control rounded-0", rows=3, placeholder="Напишите сообщение...") }}
+                    </div>
+                    <button type="submit" class="btn w-100 fw-bold text-white rounded-0" style="background-color: #e21a1a; border: none;">ОТПРАВИТЬ</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-secondary rounded-0 small text-center">Заявка закрыта</div>
         {% endif %}
     </div>
 </div>
-
-<!-- БЛОК КОММЕНТАРИЕВ -->
-<h5 class="mb-3">Обсуждение заявки:</h5>
-
-<!-- Список существующих комментариев -->
-<div class="mb-4">
-    {% if not comments %}
-        <p class="text-muted">Комментариев пока нет.</p>
-    {% else %}
-        {% for comment in comments %}
-            <div class="card mb-2 {% if comment.author.role == 'support' %}border-info{% endif %} shadow-sm">
-                <div class="card-body py-2">
-                    <div class="d-flex justify-content-between">
-                        <strong>
-                            {{ comment.author.username }} 
-                            {% if comment.author.role == 'support' %}
-                                <span class="badge bg-info text-dark">Поддержка</span>
-                            {% endif %}
-                        </strong>
-                        <small class="text-muted">{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
-                    </div>
-                    <p class="mb-0 mt-1" style="white-space: pre-wrap;">{{ comment.text }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
-</div>
-
-<!-- Форма добавления комментария (скрыта, если заявка закрыта) -->
-{% if ticket.status != 'Закрыта' %}
-<div class="card shadow-sm">
-    <div class="card-body bg-light">
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <div class="mb-2">
-                {{ form.text(class="form-control", rows=3, placeholder="Напишите комментарий или уточнение...") }}
-            </div>
-            {{ form.submit(class="btn btn-primary btn-sm") }}
-        </form>
-    </div>
-</div>
-{% else %}
-    <div class="alert alert-secondary">Заявка закрыта. Обсуждение завершено.</div>
-{% endif %}
 {% endblock %}

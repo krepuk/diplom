@@ -65,14 +65,42 @@ body {
 
 .rzd-card {
     background-color: white;
-    min-height: 200px;
+    /* Уменьшаем высоту с 200px до 140px */
+    min-height: 140px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
+    text-decoration: none !important;
     color: #333;
-    padding: 20px;
+    /* Немного уменьшаем отступы */
+    padding: 10px 15px; 
+    border: 1px solid #ccc;
+}
+
+/* Также немного уменьшим шрифт цифр, чтобы они гармонично смотрелись в меньшем блоке */
+.rzd-card .count {
+    font-size: 2.2rem; /* Было 2.5rem */
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.rzd-card .label {
+    font-size: 13px; /* Чуть меньше текст подписи */
+    color: #666;
+}
+
+/* Возвращаем чередование цветов (серый/белый) */
+.rzd-grid a:nth-child(2n+1), 
+.rzd-grid div:nth-child(2n+1) {
+    background-color: #d9d9d9;
+}
+
+.rzd-grid a:nth-child(2n), 
+.rzd-grid div:nth-child(2n) {
+    background-color: white;
 }
 
 /* Чередование цветов плиток */
