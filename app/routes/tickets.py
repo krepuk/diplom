@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
 from datetime import datetime
-from app.models import Ticket, Comment # <-- Добавили Comment
-from app.forms import TicketForm, CommentForm # <-- Добавили CommentForm
+from app.models import Ticket, Comment
+from app.forms import TicketForm, CommentForm 
 
 tickets_bp = Blueprint('tickets', __name__)
 
@@ -16,7 +16,7 @@ def create():
             title=form.title.data,
             description=form.description.data,
             category=form.category.data,
-            priority=form.priority.data, # <-- ДОБАВИЛИ ЭТУ СТРОЧКУ
+            priority=form.priority.data, 
             creator_id=current_user.id
         )
         db.session.add(ticket)
@@ -29,7 +29,6 @@ def create():
 @login_required
 def list_tickets():
     if current_user.role == 'superadmin':
-        # Суперадмин видит ТОЛЬКО проблемные заявки (переоткрытые 3 и более раз)
         tickets = Ticket.query.filter(Ticket.reopen_count >= 3).order_by(Ticket.created_at.desc()).all()
     elif current_user.role == 'support':
         tickets = Ticket.query.filter(
@@ -47,7 +46,6 @@ def detail(id):
     ticket = Ticket.query.get_or_404(id)
     form = CommentForm()
 
-    # Обработка отправки комментария
     if form.validate_on_submit():
         comment = Comment(
             text=form.text.data,
@@ -58,7 +56,6 @@ def detail(id):
         db.session.commit()
         return redirect(url_for('tickets.detail', id=ticket.id))
 
-    # Получаем все комментарии к этой заявке, отсортированные по дате (старые сверху)
     comments = ticket.comments.order_by(Comment.created_at.asc()).all()
 
     return render_template('tickets/detail.html', ticket=ticket, form=form, comments=comments)
@@ -68,13 +65,11 @@ def detail(id):
 def take_ticket(id):
     ticket = Ticket.query.get_or_404(id)
     
-
     if current_user.role == 'superadmin':
         if ticket.reopen_count >= 3:
             old_assignee = ticket.assignee.username if ticket.assignee else "Не назначен"
             ticket.assignee_id = current_user.id
             
-            # Добавим системный комментарий в чат
             sys_comment = Comment(
                 text=f"Суперадмин забрал заявку под свой контроль (предыдущий исполнитель: {old_assignee}).", 
                 author_id=current_user.id, 
@@ -106,7 +101,6 @@ def change_status(id):
     ticket = Ticket.query.get_or_404(id)
     new_status = request.form.get('status')
     
-    # Обычная смена статусов
     if new_status in ['Решена', 'Закрыта']:
         ticket.status = new_status
         ticket.closed_at = datetime.utcnow() 

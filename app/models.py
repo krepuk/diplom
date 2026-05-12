@@ -10,11 +10,11 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)  # Новое поле
-    phone = db.Column(db.String(20), nullable=False)                # Новое поле
+    email = db.Column(db.String(120), unique=True, nullable=False)  
+    phone = db.Column(db.String(20), nullable=False)               
     password_hash = db.Column(db.String(128))
-    role = db.Column(db.String(20), default='employee') # employee, support, superadmin
-    department = db.Column(db.String(50)) # IT, 1C, HR (только для support)
+    role = db.Column(db.String(20), default='employee') 
+    department = db.Column(db.String(50)) 
 
     # Связи
     tickets_created = db.relationship('Ticket', foreign_keys='Ticket.creator_id', backref='creator', lazy='dynamic')
@@ -61,8 +61,7 @@ class Ticket(db.Model):
         if last_comment and last_comment.author_id != current_user_id:
             return True
         return False
-    
-    # --- НОВЫЕ ФУНКЦИИ ---
+ 
     @property
     def comment_count(self):
         """Возвращает общее количество комментариев в заявке"""
@@ -70,15 +69,13 @@ class Ticket(db.Model):
 
     def has_new_reply(self, current_user_id):
         """Проверяет, написал ли последний комментарий КТО-ТО ДРУГОЙ"""
-        # Ищем самый свежий комментарий
+
         last_comment = self.comments.order_by(Comment.created_at.desc()).first()
         
-        # Если комментарий есть, и его автор НЕ тот, кто сейчас смотрит на экран
         if last_comment and last_comment.author_id != current_user_id:
             return True
         return False
     
-# НОВЫЙ КЛАСС ДЛЯ КОММЕНТАРИЕВ
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
@@ -91,10 +88,9 @@ class Comment(db.Model):
 
 class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False) # Вопрос
-    content = db.Column(db.Text, nullable=False)      # Ответ
+    title = db.Column(db.String(200), nullable=False) 
+    content = db.Column(db.Text, nullable=False)      
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Кто написал эту статью (связь с пользователем)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship('User', backref='articles_created')

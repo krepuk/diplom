@@ -6,14 +6,12 @@ from app.forms import ArticleForm
 
 knowledge_bp = Blueprint('knowledge', __name__)
 
-# Просмотр всех статей
 @knowledge_bp.route('/')
 @login_required
 def list_articles():
     articles = Article.query.order_by(Article.created_at.desc()).all()
     return render_template('knowledge/list.html', articles=articles)
 
-# Создание новой статьи (Только для админов)
 @knowledge_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
@@ -35,7 +33,6 @@ def create():
         
     return render_template('knowledge/form.html', form=form)
 
-# Удаление статьи (Только для админов)
 @knowledge_bp.route('/delete/<int:id>', methods=['POST'])
 @login_required
 def delete(id):

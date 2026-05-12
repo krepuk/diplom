@@ -2,7 +2,6 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-7">
-        <!-- Карточка в едином стиле сайта -->
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white border-bottom-0 pt-4 px-4">
                 <h2 class="fw-light mb-1" style="color: #333;">Регистрация сотрудника</h2>
@@ -41,7 +40,6 @@
 
                     <hr class="my-4" style="opacity: 0.1;">
 
-                    <!-- Поле ДОЛЖНОСТЬ (удалили старую подсказку) -->
                     <div class="mb-3">
                         {{ form.role.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.role(class="form-select rounded-0" + (" is-invalid" if form.role.errors else "")) }}
@@ -55,8 +53,6 @@
                         {% for error in form.department.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
 
                     {% endif %}
-
-<!-- ... после поля Выбор участка ... -->
 
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
@@ -80,13 +76,11 @@
 </div>
 
 <style>
-    /* Фирменный красный фокус для всех полей */
     .form-control:focus, .form-select:focus {
         border-color: #e21a1a !important;
         box-shadow: 0 0 0 0.25rem rgba(226, 26, 26, 0.1) !important;
     }
     
-    /* Сохраняем валидацию Bootstrap */
     .is-invalid:focus {
         box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
     }

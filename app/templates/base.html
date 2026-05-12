@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
     <style>
-        /* Гарантируем, что плашка не схлопнется */
         .nav-wrapper {
             display: flex;
             justify-content: space-between;
@@ -18,12 +17,11 @@
             min-height: 48px;
         }
 
-        /* Общие свойства для правой части (трапеции) */
         .user-item, .logout-item {
-            background-color: #ffffff !important; /* Белый фон для обеих кнопок */
+            background-color: #ffffff !important; 
             transform: skewX(-25deg);
-            border: 1px solid #ddd; /* Легкая рамка, чтобы кнопки не сливались с белой шапкой */
-            border-bottom: none; /* Чтобы плавно стояли на красной линии */
+            border: 1px solid #ddd; 
+            border-bottom: none; 
             transition: 0.2s;
         }
 
@@ -37,38 +35,33 @@
 
         /* Цвета текста */
         .user-item .nav-link-custom {
-            color: #8e8e8e !important; /* Серый текст для аккаунта */
+            color: #8e8e8e !important; 
         }
 
         .logout-item .nav-link-custom {
-            color: #e21a1a !important; /* Красный текст для выхода */
+            color: #e21a1a !important; 
         }
 
-        /* Базовый стиль ссылки (без фона!) */
         .nav-link-custom {
             display: block;
             padding: 12px 25px;
             text-decoration: none;
             font-weight: bold;
             font-size: 14px;
-            transform: skewX(25deg); /* Компенсируем наклон */
-            background-color: transparent !important; /* Обязательно прозрачный фон */
+            transform: skewX(25deg); 
+            background-color: transparent !important; 
             white-space: nowrap;
         }
 
-        /* Эффект при наведении (легкое затемнение) */
         .user-item:hover, .logout-item:hover {
             background-color: #f8f8f8 !important;
         }
     </style>
 </head>
 <body>
-    <!-- Белая шапка (Логотип и Название) -->
     <header class="bg-white py-2">
         <div class="container d-flex align-items-center">
-            <a href="{{ url_for('main.index') }}">
-                <img src="{{ url_for('static', filename='img/pid.png') }}" alt="РЖД" height="50">
-            </a>
+
             <div class="ms-4">
                 <h1 class="h3 mb-0" style="color: #e21a1a; font-weight: normal; letter-spacing: -1px;">
                     АО «Экспресс-пригород»
@@ -80,12 +73,10 @@
         </div>
     </header>
 
-    <!-- Навигация (Плашка с красной линией) -->
     <nav class="rzd-nav-container">
         <div class="container">
             <div class="nav-wrapper">
                 
-                <!-- Левая часть: Меню (только если вошел) -->
                 <ul class="nav">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item active-red">
@@ -110,16 +101,13 @@
                     {% endif %}
                 </ul>
 
-                <!-- Правая часть: Аккаунт и Выход (только если вошел) -->
                 {% if current_user.is_authenticated %}
                 <ul class="nav">
-                    <!-- Имя пользователя (Серая трапеция) -->
                     <li class="nav-item user-item">
                         <span class="nav-link-custom">
                             {{ current_user.username }}
                         </span>
                     </li>
-                    <!-- Кнопка Выйти (Красная трапеция) -->
                     <li class="nav-item logout-item">
                         <a class="nav-link-custom" href="{{ url_for('auth.logout') }}">ВЫЙТИ</a>
                     </li>

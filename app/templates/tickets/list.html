@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Заголовок -->
 <div class="mb-4">
     <h2 class="fw-light mb-1" style="color: #333;">Список заявок</h2>
     <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
@@ -27,7 +26,6 @@
                     <tr>
                         <td class="ps-4 text-muted small">#{{ ticket.id }}</td>
                         
-                        <!-- Приоритет -->
                         <td>
                             <span class="badge rounded-0 fw-normal py-1" 
                                   style="display: inline-block; width: 100px; text-align: center;
@@ -39,7 +37,6 @@
                             </span>
                         </td>
 
-                        <!-- Тема -->
                         <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <span class="fw-bold" style="color: #444;">{{ ticket.title }}</span>
                             {% if ticket.comment_count > 0 %}
@@ -51,8 +48,6 @@
                         
                         <td class="small text-muted">{{ ticket.category }}</td>
                         
-                        <!-- Статус -->
-                        <!-- Статус (цветовой акцент только у Новой заявки) -->
                         <td class="text-center">
                             <span class="badge rounded-0 fw-normal py-1" 
                                 style="display: inline-block; width: 100px; text-align: center;
@@ -91,7 +86,7 @@
 </div>
 
 <style>
-    /* Легкая подсветка строки при наведении */
+
     .table-hover tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.02) !important;
     }

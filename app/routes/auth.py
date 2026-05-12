@@ -29,15 +29,12 @@ def logout():
 @auth_bp.route('/create_user', methods=['GET', 'POST'])
 @login_required
 def create_user():
-    # 1. Сначала проверяем права доступа
     if current_user.role == 'employee':
         flash('У вас нет прав для доступа к этой странице.', 'danger')
         return redirect(url_for('main.dashboard'))
 
-    # 2. Инициализируем форму (ЭТО ДОЛЖНО БЫТЬ ПЕРЕД НАСТРОЙКОЙ РОЛЕЙ)
     form = CreateUserForm()
     
-    # 3. Теперь настраиваем доступные роли для этой формы
     if current_user.role == 'superadmin':
         form.role.choices = [
             ('employee', 'Контролер-кассир'),
@@ -50,11 +47,10 @@ def create_user():
             ('employee', 'Контролер-кассир'),
             ('employee', 'Билетный кассир')
         ]
-        # Если создает обычный инженер, убираем выбор отдела (он не может создавать админов)
+
         if hasattr(form, 'department'):
             del form.department
 
-    # 4. Логика сохранения данных
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
