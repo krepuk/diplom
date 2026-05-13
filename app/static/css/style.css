@@ -7,44 +7,42 @@ body {
 /* Контейнер навигации с красной линией */
 .rzd-nav-container {
     background-color: white;
-    border-bottom: 4px solid #e21a1a; /* Та самая красная полоса */
+    border-bottom: 4px solid #e21a1a; /*  красная полоса */
     margin-bottom: 30px;
 }
 
-/* 1. Контейнер: обнуляем всё и задаем жесткий gap */
 .rzd-nav-container .nav {
-    display: flex !important; /* Гарантируем флекс */
+    display: flex !important; 
     padding: 0 !important;
     margin: 0 !important;
     list-style: none;
-    gap: 4px; /* ТУТ ЗАДАЕТСЯ РАССТОЯНИЕ (измени на 2px или 6px по вкусу) */
+    gap: 4px; 
     align-items: flex-end;
 }
 
-/* 2. Элемент списка: убираем все margin */
 .rzd-nav-container .nav-item {
     background-color: #8e8e8e;
-    margin: 0 !important; /* Убираем все отступы, которые могли остаться */
+    margin: 0 !important; 
     padding: 0 !important;
     transform: skewX(-25deg);
     transition: 0.2s;
     border: none;
 }
 
-/* 3. Ссылка: задаем одинаковую высоту и внутренние отступы */
+/* Ссылка: задаем одинаковую высоту и внутренние отступы */
 .rzd-nav-container .nav-item .nav-link {
     display: block;
-    padding: 12px 25px; /* Одинаковые отступы внутри всех кнопок */
+    padding: 12px 25px; 
     color: white !important;
     text-decoration: none;
     font-weight: bold;
     font-size: 14px;
-    transform: skewX(25deg); /* Возвращаем текст в ровное состояние */
+    transform: skewX(25deg); 
     white-space: nowrap;
     line-height: 1.2;
 }
 
-/* Активная или первая вкладка (ГЛАВНАЯ) - КРАСНАЯ */
+/* ГЛАВНАЯ - КРАСНАЯ */
 .rzd-nav-container .nav-item.active-red,
 .rzd-nav-container .nav-item:first-child {
     background-color: #e21a1a;
@@ -65,7 +63,6 @@ body {
 
 .rzd-card {
     background-color: white;
-    /* Уменьшаем высоту с 200px до 140px */
     min-height: 140px; 
     display: flex;
     flex-direction: column;
@@ -73,14 +70,12 @@ body {
     align-items: center;
     text-decoration: none !important;
     color: #333;
-    /* Немного уменьшаем отступы */
     padding: 10px 15px; 
     border: 1px solid #ccc;
 }
 
-/* Также немного уменьшим шрифт цифр, чтобы они гармонично смотрелись в меньшем блоке */
 .rzd-card .count {
-    font-size: 2.2rem; /* Было 2.5rem */
+    font-size: 2.2rem; 
     font-weight: 300;
     line-height: 1;
     margin-bottom: 5px;
@@ -88,11 +83,10 @@ body {
 }
 
 .rzd-card .label {
-    font-size: 13px; /* Чуть меньше текст подписи */
+    font-size: 13px; 
     color: #666;
 }
 
-/* Возвращаем чередование цветов (серый/белый) */
 .rzd-grid a:nth-child(2n+1), 
 .rzd-grid div:nth-child(2n+1) {
     background-color: #d9d9d9;

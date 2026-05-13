@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ЗАГОЛОВОК СТРАНИЦЫ -->
 <div class="mb-4">
     <h2 class="fw-light mb-1" style="color: #333;">Список заявок</h2>
+    <!-- Декоративная красная полоска -->
     <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
 </div>
 
+<!-- ТАБЛИЦА ТИКЕТОВ -->
 <div class="card shadow-sm border-0 mt-3">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover mb-0" style="table-layout: fixed; width: 100%;">
+                <!-- Шапка таблицы -->
                 <thead style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                     <tr class="text-uppercase small text-muted fw-bold">
                         <th class="ps-4" style="width: 70px;">ID</th>
@@ -24,8 +28,10 @@
                 <tbody class="align-middle">
                     {% for ticket in tickets %}
                     <tr>
+                        <!-- ID тикета -->
                         <td class="ps-4 text-muted small">#{{ ticket.id }}</td>
                         
+                        <!-- Приоритет -->
                         <td>
                             <span class="badge rounded-0 fw-normal py-1" 
                                   style="display: inline-block; width: 100px; text-align: center;
@@ -37,6 +43,7 @@
                             </span>
                         </td>
 
+                        <!-- Заголовок темы -->
                         <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <span class="fw-bold" style="color: #444;">{{ ticket.title }}</span>
                             {% if ticket.comment_count > 0 %}
@@ -46,8 +53,10 @@
                             {% endif %}
                         </td>
                         
+                        <!-- Категория -->
                         <td class="small text-muted">{{ ticket.category }}</td>
                         
+                        <!-- Статус: Новая выделяется красной рамкой -->
                         <td class="text-center">
                             <span class="badge rounded-0 fw-normal py-1" 
                                 style="display: inline-block; width: 100px; text-align: center;
@@ -60,10 +69,12 @@
                             </span>
                         </td>
                         
+                        <!-- Дата создания -->
                         <td class="text-center small text-muted">
                             {{ ticket.created_at.strftime('%d.%m.%Y %H:%M') }}
                         </td>
                         
+                        <!-- Кнопка перехода к деталям -->
                         <td class="text-end pe-4">
                             <a href="{{ url_for('tickets.detail', id=ticket.id) }}" 
                                class="btn btn-sm rounded-0 text-white px-3" 
@@ -77,6 +88,7 @@
             </table>
         </div>
         
+        <!-- Сообщение, если список пуст -->
         {% if not tickets %}
         <div class="p-5 text-center text-muted">
             <p class="mb-0">Активных заявок не найдено.</p>
@@ -85,11 +97,12 @@
     </div>
 </div>
 
+<!-- КАСТОМНЫЕ СТИЛИ -->
 <style>
-
     .table-hover tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.02) !important;
     }
+    
     .table td, .table th {
         vertical-align: middle;
     }

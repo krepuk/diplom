@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<!-- ЗАГОЛОВОК С СТАТУСОМ -->
 <div class="mb-4 d-flex justify-content-between align-items-end">
     <div style="flex-grow: 1;">
         <h2 class="fw-light mb-1" style="color: #333;">Заявка #{{ ticket.id }}: {{ ticket.title }}</h2>
+
         <div style="width: 100%; height: 3px; background-color: #e21a1a;"></div>
     </div>
     <div class="ms-4">
-        <!-- Статус: Красная рамка, черный текст -->
         <span class="rounded-0 fw-bold py-1 px-3" 
             style="display: inline-block; min-width: 120px; text-align: center; font-size: 0.9rem; 
                     border: 1px solid #e21a1a; color: #000000;">
@@ -18,10 +18,11 @@
 </div>
 
 <div class="row">
-    <!-- Левая колонка: Основная информация -->
+    <!-- ИНФОРМАЦИЯ О ТИКЕТЕ -->
     <div class="col-md-8">
         <div class="card shadow-sm border-0 rounded-0 mb-4">
             <div class="card-body p-4">
+                <!-- Данные отправителя, категория, приоритет, исполнитель, дата -->
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <small class="text-uppercase text-muted fw-bold d-block mb-1">Отправитель</small>
@@ -54,20 +55,23 @@
 
                 <hr style="opacity: 0.1;">
                 
+                <!-- Описание проблемы с сохранением форматирования -->
                 <small class="text-uppercase text-muted fw-bold d-block mb-2">Описание проблемы</small>
                 <div class="p-3 bg-light border-start border-4 border-secondary" style="white-space: pre-wrap; color: #444; background-color: #fcfcfc !important;">{{ ticket.description }}</div>
             </div>
 
-            <!-- Подвал карточки с кнопками -->
+            <!-- КНОПКИ ДЕЙСТВИЙ (ЗАВИСЯТ ОТ СТАТУСА И РОЛИ) -->
             <div class="card-footer bg-white border-top p-4 d-flex gap-2">
                 <a href="{{ url_for('tickets.list_tickets') }}" class="btn rounded-0 border fw-bold small text-muted text-uppercase px-3">← Назад</a>
 
+                <!-- Взять в работу (для новых тикетов) -->
                 {% if current_user.role in ['support', 'superadmin'] and ticket.status == 'Новая' %}
                 <form action="{{ url_for('tickets.take_ticket', id=ticket.id) }}" method="POST">
                     <button type="submit" class="btn rounded-0 text-white fw-bold px-3" style="background-color: #e21a1a; border: none;">ПРИНЯТЬ В РАБОТУ</button>
                 </form>
                 {% endif %}
 
+                <!-- Отметить как решенное (для исполнителя) -->
                 {% if current_user.role in ['support', 'superadmin'] and ticket.status == 'В работе' and ticket.assignee_id == current_user.id %}
                 <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST">
                     <input type="hidden" name="status" value="Решена">
@@ -75,6 +79,7 @@
                 </form>
                 {% endif %}
 
+                <!-- Действия для автора тикета, когда статус "Решена" -->
                 {% if current_user.id == ticket.creator_id and ticket.status == 'Решена' %}
                     <form action="{{ url_for('tickets.change_status', id=ticket.id) }}" method="POST">
                         <input type="hidden" name="status" value="Закрыта">
@@ -89,9 +94,11 @@
         </div>
     </div>
 
+    <!-- КОММЕНТАРИИ И ОБСУЖДЕНИЕ -->
     <div class="col-md-4">
         <h5 class="text-uppercase small fw-bold text-muted mb-3">Обсуждение</h5>
         
+        <!-- БЛОК КОММЕНТАРИЕВ (прокручиваемый) -->
         <div class="mb-4" style="max-height: 500px; overflow-y: auto;">
             {% if not comments %}
                 <p class="text-muted small italic">Комментариев пока нет.</p>
@@ -114,6 +121,7 @@
             {% endif %}
         </div>
 
+        <!-- ФОРМА ДОБАВЛЕНИЯ КОММЕНТАРИЯ (только если тикет не закрыт) -->
         {% if ticket.status != 'Закрыта' %}
         <div class="card border-0 rounded-0 shadow-sm">
             <div class="card-body p-3">

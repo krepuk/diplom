@@ -10,13 +10,16 @@
             
             <div class="card-body p-4 pt-2">
                 <form method="POST">
+                    <!-- CSRF защита формы -->
                     {{ form.hidden_tag() }}
                     
+                    <!-- ПОЛЕ: Заголовок заявки -->
                     <div class="mb-3 mt-2">
                         {{ form.title.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.title(class="form-control rounded-0", placeholder="Краткое описание проблемы") }}
                     </div>
                     
+                    <!-- РЯД: Категория и Приоритет -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             {{ form.category.label(class="form-label text-uppercase text-muted small fw-bold") }}
@@ -28,13 +31,16 @@
                         </div>
                     </div>
                     
+                    <!-- ПОЛЕ: Описание проблемы -->
                     <div class="mb-4">
                         {{ form.description.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.description(class="form-control rounded-0", rows=6, placeholder="Подробно опишите вашу проблему...") }}
                     </div>
                     
+                    <!-- КНОПКА ОТПРАВКИ -->
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" style="background-color: #e21a1a; border: none;">
+                        <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
+                                style="background-color: #e21a1a; border: none;">
                             ОТПРАВИТЬ ЗАЯВКУ
                         </button>
                     </div>
@@ -42,6 +48,7 @@
             </div>
         </div>
         
+        <!-- ССЫЛКА НАЗАД (без сохранения) -->
         <div class="mt-3 text-center">
             <a href="{{ url_for('tickets.list_tickets') }}" class="text-decoration-none text-muted small">
                 ← Вернуться к списку без сохранения
@@ -50,6 +57,7 @@
     </div>
 </div>
 
+<!-- КАСТОМНЫЕ СТИЛИ -->
 <style>
     .form-control:focus, .form-select:focus {
         border-color: #e21a1a;

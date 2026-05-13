@@ -7,6 +7,8 @@ from app.forms import LoginForm, CreateUserForm
 
 auth_bp = Blueprint('auth', __name__)
 
+# Вход в систему
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -20,6 +22,8 @@ def login():
         login_user(user)
         return redirect(url_for('main.dashboard'))
     return render_template('auth/login.html', form=form)
+
+# Выход из системы
 
 @auth_bp.route('/logout')
 def logout():

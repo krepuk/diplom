@@ -10,19 +10,24 @@
             
             <div class="card-body p-4 pt-2">
                 <form method="POST">
+                    <!-- CSRF защита формы -->
                     {{ form.hidden_tag() }}
                     
+                    <!-- ПОЛЕ: Заголовок статьи  -->
                     <div class="mb-3 mt-3">
                         {{ form.title.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.title(class="form-control rounded-0", placeholder="Введите заголовок вопроса") }}
                     </div>
                     
+                    <!-- ПОЛЕ: Содержание статьи -->
                     <div class="mb-4">
                         {{ form.content.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.content(class="form-control rounded-0", rows=8, placeholder="Опишите решение проблемы максимально подробно...") }}
+                        <!-- Подсказка для пользователя -->
                         <div class="form-text small">Используйте простой и понятный язык для сотрудников.</div>
                     </div>
                     
+                    <!-- КНОПКИ ДЕЙСТВИЙ -->
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-lg fw-bold text-white rounded-0 flex-grow-1" 
                                 style="background-color: #e21a1a; border: none;">
@@ -37,6 +42,7 @@
     </div>
 </div>
 
+<!-- КАСТОМНЫЙ СТИЛЬ -->
 <style>
     .form-control:focus {
         border-color: #e21a1a;

@@ -10,18 +10,22 @@
             
             <div class="card-body p-4 pt-2">
                 <form method="POST">
+                    <!-- CSRF токен защиты от подделки межсайтовых запросов -->
                     {{ form.hidden_tag() }}
                     
+                    <!-- ПОЛЕ: Имя пользователя -->
                     <div class="mb-3 mt-3">
                         {{ form.username.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.username(class="form-control rounded-0", placeholder="Введите логин") }}
                     </div>
                     
+                    <!-- ПОЛЕ: Пароль  -->
                     <div class="mb-4">
                         {{ form.password.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.password(class="form-control rounded-0", placeholder="Введите пароль") }}
                     </div>
                     
+                    <!--  КНОПКА ОТПРАВКИ  -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
                                 style="background-color: #e21a1a; border: none;">
@@ -35,6 +39,7 @@
     </div>
 </div>
 
+<!-- КАСТОМНЫЕ СТИЛИ -->
 <style>
     .form-control:focus {
         border-color: #e21a1a;

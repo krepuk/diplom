@@ -10,12 +10,15 @@
             
             <div class="card-body p-4 pt-2">
                 <form method="POST">
+                    <!-- CSRF защита (из Flask-WTF) -->
                     {{ form.hidden_tag() }}
                     
+                    <!--Логин и Пароль -->
                     <div class="row mt-3">
                         <div class="col-md-6 mb-3">
                             {{ form.username.label(class="form-label text-uppercase text-muted small fw-bold") }}
                             {{ form.username(class="form-control rounded-0" + (" is-invalid" if form.username.errors else ""), placeholder="Логин") }}
+                            <!-- Вывод ошибок валидации для поля username -->
                             {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                         </div>
                         <div class="col-md-6 mb-3">
@@ -25,6 +28,7 @@
                         </div>
                     </div>
 
+                    <!--  Email и Телефон -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             {{ form.email.label(class="form-label text-uppercase text-muted small fw-bold") }}
@@ -40,20 +44,23 @@
 
                     <hr class="my-4" style="opacity: 0.1;">
 
+                    <!-- ПОЛЕ: Роль сотрудника -->
                     <div class="mb-3">
                         {{ form.role.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.role(class="form-select rounded-0" + (" is-invalid" if form.role.errors else "")) }}
                         {% for error in form.role.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                     </div>
 
+                    <!-- УСЛОВНОЕ ПОЛЕ: Отдел  -->
                     {% if current_user.role == 'superadmin' %}
                     <div class="mb-4">
                         {{ form.department.label(class="form-label text-uppercase text-muted small fw-bold") }}
                         {{ form.department(class="form-select rounded-0" + (" is-invalid" if form.department.errors else "")) }}
                         {% for error in form.department.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-
+                    </div>
                     {% endif %}
 
+                    <!-- КНОПКА ОТПРАВКИ -->
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-lg fw-bold text-white rounded-0" 
                                 style="background-color: #e21a1a; border: none;">
@@ -66,16 +73,16 @@
     </div>
 </div>
 
-        
-        <div class="mt-2 text-center">
-            <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-muted small">
-                ← Вернуться в панель управления
-            </a>
-        </div>
-    </div>
+<!-- ССЫЛКА НАЗАД -->
+<div class="mt-2 text-center">
+    <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-muted small">
+        ← Вернуться в панель управления
+    </a>
 </div>
 
+<!-- КАСТОМНЫЕ СТИЛИ -->
 <style>
+    /* Красный акцент при фокусе на поле ввода */
     .form-control:focus, .form-select:focus {
         border-color: #e21a1a !important;
         box-shadow: 0 0 0 0.25rem rgba(226, 26, 26, 0.1) !important;

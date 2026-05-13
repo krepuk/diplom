@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
+    <!-- Стили для навигации -->
     <style>
         .nav-wrapper {
             display: flex;
@@ -17,9 +18,10 @@
             min-height: 48px;
         }
 
+        /* Блок пользователя и кнопка выхода — наклонные прямоугольники */
         .user-item, .logout-item {
             background-color: #ffffff !important; 
-            transform: skewX(-25deg);
+            transform: skewX(-25deg);  /* Наклон самого блока */
             border: 1px solid #ddd; 
             border-bottom: none; 
             transition: 0.2s;
@@ -33,7 +35,7 @@
             margin-left: 5px;
         }
 
-        /* Цвета текста */
+        /* Текст внутри наклонных блоков — обратный наклон для читаемости */
         .user-item .nav-link-custom {
             color: #8e8e8e !important; 
         }
@@ -48,7 +50,7 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 14px;
-            transform: skewX(25deg); 
+            transform: skewX(25deg);  /* Выравнивание текста */
             background-color: transparent !important; 
             white-space: nowrap;
         }
@@ -59,9 +61,10 @@
     </style>
 </head>
 <body>
+    <!-- ШАПКА -->
     <header class="bg-white py-2">
         <div class="container d-flex align-items-center">
-
+            <!-- Логотип / название компании -->
             <div class="ms-4">
                 <h1 class="h3 mb-0" style="color: #e21a1a; font-weight: normal; letter-spacing: -1px;">
                     АО «Экспресс-пригород»
@@ -73,6 +76,7 @@
         </div>
     </header>
 
+    <!-- НАВИГАЦИОННОЕ МЕНЮ -->
     <nav class="rzd-nav-container">
         <div class="container">
             <div class="nav-wrapper">
@@ -88,11 +92,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('tickets.list_tickets') }}">ЗАЯВКИ</a>
                         </li>
+                        
+                        <!-- Кнопка создания заявки (только для обычных пользователей, не для поддержки) -->
                         {% if current_user.role not in ['support', 'admin', 'superadmin'] %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('tickets.create') }}">СОЗДАТЬ ЗАЯВКУ</a>
                             </li>
                         {% endif %}
+                        
+                        <!-- Кнопка добавления сотрудника (только для суперадмина) -->
                         {% if current_user.role == 'superadmin' %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('auth.create_user') }}">ДОБАВИТЬ СОТРУДНИКА</a>
@@ -101,6 +109,7 @@
                     {% endif %}
                 </ul>
 
+                <!-- информация о пользователе + выход -->
                 {% if current_user.is_authenticated %}
                 <ul class="nav">
                     <li class="nav-item user-item">
@@ -118,7 +127,9 @@
         </div>
     </nav>
 
+    <!-- ОСНОВНОЙ КОНТЕЙНЕР С FLAH-СООБЩЕНИЯМИ -->
     <div class="container mt-4">
+        <!-- Вывод flash-сообщений (уведомлений) -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -127,9 +138,11 @@
             {% endif %}
         {% endwith %}
         
+        <!-- Блок для переопределения в дочерних шаблонах -->
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
